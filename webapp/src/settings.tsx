@@ -3,13 +3,27 @@ import * as React from 'react'
 
 import { electronHost } from './electron'
 
-interface IConfigurationData {}
+interface IProxyConfiguration {
+    port: number
+    server: string
+}
+
+interface IConfigurationData {
+    pingHosts: string[]
+    pingInterval: number
+    proxies: Record<number, IProxyConfiguration>
+    proxyIp: string
+}
 
 export interface IConfiguration extends IConfigurationData {
     update<TKey extends keyof IConfigurationData>(key: TKey, value: IConfigurationData[TKey]): void
 }
 
 const initialConfig: IConfiguration = {
+    pingHosts: [],
+    pingInterval: 5000,
+    proxies: [],
+    proxyIp: '',
     update: () => alert('out of bound call to settings updater'),
 }
 

@@ -21,7 +21,8 @@
         }
     },
     "dependencies": {
-        "dotenv": "^16.4.5"
+        "dotenv": "^16.4.5",
+        "ping": "^0.4.4"
     },
     "description": "Proxy für TCP/IP Verbindungen",
     "devDependencies": {
@@ -31,6 +32,7 @@
         "@pmmmwh/react-refresh-webpack-plugin": "^0.5.11",
         "@types/debug": "^4.1.12",
         "@types/node": "^20.11.30",
+        "@types/ping": "^0.4.4",
         "@types/react": "^18.2.69",
         "@types/react-dom": "^18.2.22",
         "babel-loader": "^9.1.3",

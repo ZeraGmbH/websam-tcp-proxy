@@ -1,6 +1,9 @@
 import { clsx } from 'clsx'
 import * as React from 'react'
 
+import { Ip } from './parts/ip'
+import { Pings } from './parts/pings'
+import { Proxies } from './parts/proxies'
 import styles from './root.module.scss'
 import { SettingsContext, useSettings } from './settings'
 import { AppState, IAppState } from './state'
@@ -17,7 +20,11 @@ export const Root: React.FC<IRootProps> = (props) => {
     return (
         <AppState.Provider value={appState}>
             <SettingsContext.Provider value={settings}>
-                <div className={clsx(styles.root, props.className)}>[TBD]</div>
+                <div className={clsx(styles.root, props.className)}>
+                    <Ip />
+                    <Pings />
+                    <Proxies />
+                </div>
             </SettingsContext.Provider>
         </AppState.Provider>
     )
