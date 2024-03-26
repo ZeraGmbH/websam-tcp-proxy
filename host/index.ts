@@ -1,8 +1,10 @@
 import { app, BrowserWindow, ipcMain, protocol } from 'electron'
-import { TRequestType, TResponse, TTypedRequest } from 'ipc'
+import { ISerialPortsResponse, TRequestType, TResponse, TTypedRequest } from 'ipc'
 import { join } from 'path'
 
 import { listeners, THandler } from './appListeners'
+import { portName } from './serialPort'
+import { portNames } from './serialPorts'
 import { createWindow, isProduction } from './window'
 
 console.info(`electron ${process.versions.electron} (node.js ${process.version})`)
@@ -45,6 +47,28 @@ function startup(): void {
             console.error(error.message)
         }
     })
+
+    /** Zugriff auf serielle Gerärte. */
+    window.webContents.session.on('select-serial-port', (event, portList, _webContents, callback) => {
+        event.preventDefault()
+
+        portNames.splice(
+            0,
+            portNames.length,
+            ...portList
+                .map((p) => p.portName)
+                .filter((n) => n.startsWith('tty') || n.startsWith('COM'))
+                .sort()
+        )
+
+        sendToApp({ portNames, type: 'serial-response' } satisfies ISerialPortsResponse)
+
+        callback(portList?.find((p) => p.portName === portName)?.portId || '')
+    })
+
+    window.webContents.session.setPermissionCheckHandler(() => true)
+
+    window.webContents.session.setDevicePermissionHandler(() => true)
 
     /** In Produktion wird die in dem Electron Paket gebundelte Anwendung aufgerufen. */
     if (isProduction) {

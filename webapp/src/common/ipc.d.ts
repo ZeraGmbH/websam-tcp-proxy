@@ -8,11 +8,29 @@ declare module 'ipc' {
         type: 'config-response'
     }
 
-    type TRequest = IConfigRequest
+    interface ISerialPortsRequest {
+        type: 'serial-request'
+    }
+
+    interface ISerialPortsResponse {
+        portNames: string[]
+        type: 'serial-response'
+    }
+
+    interface ISetSerialPortRequest {
+        portName: string
+        type: 'port-request'
+    }
+
+    interface ISetSerialPortResponse {
+        type: 'port-response'
+    }
+
+    type TRequest = IConfigRequest | ISerialPortsRequest | ISetSerialPortRequest
 
     type TRequestType = TRequest['type']
 
-    type TResponse = IConfigResponse
+    type TResponse = IConfigResponse | ISerialPortsResponse | ISetSerialPortResponse
 
     type TResponseType = TResponse['type']
 

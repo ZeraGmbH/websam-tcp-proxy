@@ -29,16 +29,6 @@ export function createWindow(): BrowserWindow {
 
     const window = new BrowserWindow(browserOptions)
 
-    window.webContents.session.on('select-serial-port', (event, portList, _webContents, callback) => {
-        event.preventDefault()
-
-        callback(portList?.find((p) => p.portName === 'ttyS0')?.portId || '')
-    })
-
-    window.webContents.session.setPermissionCheckHandler(() => true)
-
-    window.webContents.session.setDevicePermissionHandler(() => true)
-
     if (isProduction) window.setMenu(null)
 
     return window

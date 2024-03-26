@@ -4,6 +4,7 @@ import * as React from 'react'
 import { Ip } from './parts/ip'
 import { Pings } from './parts/pings'
 import { Proxies } from './parts/proxies'
+import { Serial } from './parts/serial'
 import styles from './root.module.scss'
 import { SettingsContext, useSettings } from './settings'
 import { AppState, IAppState } from './state'
@@ -17,19 +18,12 @@ export const Root: React.FC<IRootProps> = (props) => {
 
     const appState = React.useMemo<IAppState>(() => ({}), [])
 
-    const onClick = React.useCallback(() => {
-        navigator.serial
-            .requestPort()
-            .then((p) => p?.open({ baudRate: 9600, dataBits: 8, parity: 'none', stopBits: 2 }))
-            .then((e) => alert('is open'))
-            .catch((e) => alert(e.message))
-    }, [])
-
     return (
         <AppState.Provider value={appState}>
             <SettingsContext.Provider value={settings}>
-                <div className={clsx(styles.root, props.className)} onClick={onClick}>
+                <div className={clsx(styles.root, props.className)}>
                     <Ip />
+                    <Serial />
                     <Pings />
                     <Proxies />
                 </div>
