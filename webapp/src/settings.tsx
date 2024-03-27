@@ -10,7 +10,7 @@ export interface IProxyConfiguration {
 
 export interface ISerialConfiguration {
     device: string
-    port: number
+    port: number | null
 }
 
 export interface IConfigurationData {
@@ -30,7 +30,7 @@ const initialConfig: IConfiguration = {
     pingInterval: 5000,
     proxies: {},
     proxyIp: '',
-    serial: { device: '', port: 27000 },
+    serial: { device: '', port: null },
     update: () => alert('out of bound call to settings updater'),
 }
 
