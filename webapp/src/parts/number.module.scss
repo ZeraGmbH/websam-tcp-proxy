@@ -1,0 +1,7 @@
+:local(.number) {
+    text-align: center;
+
+    &:local(.bad) {
+        background: #fa9f9f;
+    }
+}

@@ -1,0 +1,9 @@
+:local(.ping) {
+    margin-left: 2em;
+    width: 30em;
+    display: grid;
+    grid-auto-flow: column;
+    column-gap: 0.5em;
+    align-items: center;
+    justify-content: flex-start;
+}

@@ -2,24 +2,11 @@ import { clsx } from 'clsx'
 import { ISerialPortsResponse } from 'ipc'
 import * as React from 'react'
 
+import { Port } from './number'
 import styles from './serial.module.scss'
 
 import { electronHost } from '../electron'
 import { SettingsContext } from '../settings'
-
-const portReg = /^\d{1,5}$/g
-
-function getValidPort(portAsString: string): number | null | undefined {
-    if (!portAsString) return null
-
-    if (!portReg.test(portAsString)) return
-
-    const port = parseInt(portAsString)
-
-    if (port < 1024 || port > 65535) return
-
-    return port
-}
 
 interface ISerialProps {
     className?: string
@@ -30,7 +17,6 @@ export const Serial: React.FC<ISerialProps> = (props) => {
 
     const [selector, setSelector] = React.useState(false)
     const [portNames, setPortNames] = React.useState<string[]>([])
-    const [port, setPort] = React.useState('')
 
     const updatePortNames = React.useCallback((res: ISerialPortsResponse) => setPortNames(res.portNames), [])
 
@@ -39,8 +25,6 @@ export const Serial: React.FC<ISerialProps> = (props) => {
 
         return () => electronHost.removeListener('serial-response', updatePortNames)
     }, [updatePortNames])
-
-    React.useEffect(() => setPort(settings.serial.port == null ? '' : `${settings.serial.port}`), [settings])
 
     const onChoose = React.useCallback(() => {
         setSelector((open) => {
@@ -66,15 +50,7 @@ export const Serial: React.FC<ISerialProps> = (props) => {
     )
 
     const onPort = React.useCallback(
-        (ev: React.ChangeEvent<HTMLInputElement>) => {
-            const portAsString = ev.target.value
-
-            setPort(portAsString)
-
-            const newPort = getValidPort(portAsString)
-
-            if (newPort !== undefined) settings.update('serial', { ...settings.serial, port: newPort })
-        },
+        (port: number | null) => settings.update('serial', { ...settings.serial, port }),
         [settings]
     )
 
@@ -98,16 +74,7 @@ export const Serial: React.FC<ISerialProps> = (props) => {
                     )}
                 </span>
             </label>
-            <label>
-                <div>TCP/IP Port:</div>
-                <input
-                    className={clsx(getValidPort(port) === undefined && styles.bad)}
-                    size={6}
-                    type='text'
-                    value={port}
-                    onChange={onPort}
-                />
-            </label>
+            <Port port={settings.serial.port} onPort={onPort} />
         </div>
     )
 }

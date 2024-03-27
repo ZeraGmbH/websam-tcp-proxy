@@ -15,7 +15,7 @@ export interface ISerialConfiguration {
 
 export interface IConfigurationData {
     pingHosts: string[]
-    pingInterval: number
+    pingInterval: number | null
     proxies: Record<number, IProxyConfiguration>
     proxyIp: string
     serial: ISerialConfiguration
