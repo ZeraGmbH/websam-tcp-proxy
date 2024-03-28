@@ -13,7 +13,7 @@ interface ISerialProps {
 }
 
 export const Serial: React.FC<ISerialProps> = (props) => {
-    const settings = React.useContext(SettingsContext)
+    const [settings] = React.useContext(SettingsContext)
 
     const [selector, setSelector] = React.useState(false)
     const [portNames, setPortNames] = React.useState<string[]>([])
@@ -55,27 +55,31 @@ export const Serial: React.FC<ISerialProps> = (props) => {
     )
 
     return (
-        <div className={clsx(styles.serial, props.className)}>
-            <label>
-                <div>Lokales Gerät:</div>
-                <input type='text' value={settings.serial.device} onChange={onDevice} />
-                &nbsp;
-                <span className={styles.selector}>
-                    <button onClick={onChoose}>...</button>
-                    {selector && (
-                        <div className={styles.chooser}>
-                            <h1>Bekannte Geräte</h1>
-                            <div className={styles.list}>
-                                {portNames.map((n) => (
-                                    <Selector key={n} name={n} selected={onSelect} />
-                                ))}
+        <fieldset className={clsx(styles.serial, props.className)}>
+            <legend>Lokale serielle Schnittstelle</legend>
+            <div>
+                <label>
+                    <input placeholder='(Gerätename)' type='text' value={settings.serial.device} onChange={onDevice} />
+                    &nbsp;
+                    <span className={styles.selector}>
+                        <button onClick={onChoose}>...</button>
+                        {selector && (
+                            <div className={styles.chooser}>
+                                <h1>Bekannte Geräte</h1>
+                                <div className={styles.list}>
+                                    {portNames.map((n) => (
+                                        <Selector key={n} name={n} selected={onSelect} />
+                                    ))}
+                                </div>
                             </div>
-                        </div>
-                    )}
-                </span>
-            </label>
-            <Port port={settings.serial.port} onPort={onPort} />
-        </div>
+                        )}
+                    </span>
+                </label>
+                <div className={styles.port}>
+                    <Port port={settings.serial.port} onPort={onPort} />
+                </div>
+            </div>
+        </fieldset>
     )
 }
 

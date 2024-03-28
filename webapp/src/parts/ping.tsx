@@ -33,8 +33,8 @@ export const Ping: React.FC<IPingProps> = (props) => {
 
     return (
         <div className={clsx(styles.ping, props.className)}>
-            <input type='text' value={ip} onChange={doUpdate} />
             <button onClick={doDelete}>Löschen</button>
+            <input placeholder='(Name oder IP Adresse)' type='text' value={ip} onChange={doUpdate} />
         </div>
     )
 }

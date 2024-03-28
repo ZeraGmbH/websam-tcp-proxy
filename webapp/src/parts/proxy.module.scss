@@ -1,0 +1,21 @@
+:local(.proxy) {
+    margin: 0.2em 0 0 2em;
+    display: grid;
+    grid-auto-flow: column;
+    column-gap: 0.5em;
+    align-items: center;
+    justify-content: flex-start;
+
+    > :local(.port) {
+        &:local(.bad) {
+            background: red;
+        }
+
+        > label {
+            display: grid;
+            grid-auto-flow: column;
+            align-items: center;
+            column-gap: 0.5em;
+        }
+    }
+}

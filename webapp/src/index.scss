@@ -36,6 +36,14 @@ html > body {
             border-radius: 0.5em;
             padding: 0.3em 0.5em;
         }
+
+        fieldset {
+            background: #f0f0f0;
+
+            > legend {
+                padding: 0 0.3em;
+            }
+        }
     }
 }
 

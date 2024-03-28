@@ -12,7 +12,7 @@ interface IPingsProps {
 }
 
 export const Pings: React.FC<IPingsProps> = (props) => {
-    const settings = React.useContext(SettingsContext)
+    const [settings] = React.useContext(SettingsContext)
 
     const onInterval = React.useCallback(
         (interval: number | null) => settings.update('pingInterval', interval),
@@ -44,18 +44,21 @@ export const Pings: React.FC<IPingsProps> = (props) => {
     )
 
     return (
-        <div className={clsx(styles.pings, props.className)}>
+        <fieldset className={clsx(styles.pings, props.className)}>
+            <legend>PING</legend>
             <Number
-                label='PING Intervall (Millisekunden, 500..59999)'
+                label='Intervall'
                 max={59999}
                 min={500}
+                tooltip='500 bis 59999 Millisekunden'
                 value={settings.pingInterval}
                 onValue={onInterval}
-            />
-            <button onClick={onAdd}>Hinzufügen</button>
+            >
+                <button onClick={onAdd}>Rechner hinzufügen</button>
+            </Number>
             {settings.pingHosts.map((ip, i) => (
                 <Ping key={i} index={i} ip={ip} onDelete={onDelete} onUpdate={onUpdate} />
             ))}
-        </div>
+        </fieldset>
     )
 }

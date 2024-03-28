@@ -4,8 +4,8 @@ import * as React from 'react'
 import { electronHost } from './electron'
 
 export interface IProxyConfiguration {
+    endPoint: string
     port: number
-    server: string
 }
 
 export interface ISerialConfiguration {
@@ -16,7 +16,7 @@ export interface ISerialConfiguration {
 export interface IConfigurationData {
     pingHosts: string[]
     pingInterval: number | null
-    proxies: Record<number, IProxyConfiguration>
+    proxies: IProxyConfiguration[]
     proxyIp: string
     serial: ISerialConfiguration
 }
@@ -28,13 +28,13 @@ export interface IConfiguration extends IConfigurationData {
 const initialConfig: IConfiguration = {
     pingHosts: [],
     pingInterval: 5000,
-    proxies: {},
+    proxies: [],
     proxyIp: '',
     serial: { device: '', port: null },
     update: () => alert('out of bound call to settings updater'),
 }
 
-export function useSettings(): Readonly<IConfiguration> {
+export function useSettings(): [Readonly<IConfiguration>, Readonly<Record<number, number>>] {
     const [settings, setSettings] = React.useState<IConfigurationData>(initialConfig)
     const [config, setConfig] = React.useState('')
 
@@ -72,8 +72,14 @@ export function useSettings(): Readonly<IConfiguration> {
         [settings, writeSettings]
     )
 
-    return React.useMemo(() => ({ ...settings, update }), [settings, update])
+    return React.useMemo(
+        () => [
+            { ...settings, update },
+            settings.proxies.reduce((m, e) => ((m[e.port] = (m[e.port] ?? 0) + 1), m), {} as Record<number, number>),
+        ],
+        [settings, update]
+    )
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const SettingsContext = React.createContext<IConfiguration>(initialConfig)
+export const SettingsContext = React.createContext<ReturnType<typeof useSettings>>([initialConfig, {}])

@@ -1,7 +1,15 @@
-:local(.number) {
-    text-align: center;
+:local(.input) {
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
+    justify-content: flex-start;
+    column-gap: 0.5em;
 
-    &:local(.bad) {
-        background: #fa9f9f;
+    > :local(.number) {
+        text-align: center;
+
+        &:local(.bad) {
+            background: #fa9f9f;
+        }
     }
 }

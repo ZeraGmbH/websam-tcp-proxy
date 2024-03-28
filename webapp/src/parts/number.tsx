@@ -6,11 +6,13 @@ import styles from './number.module.scss'
 const numberReg = /^(0|[1-9]\d{1,7})$/
 
 interface INumberProps {
+    children?: React.ReactNode
     className?: string
     label: string
     max: number
     min: number
     onValue(value: number | null): void
+    tooltip?: string
     value: number | null
 }
 
@@ -51,14 +53,17 @@ export const Number: React.FC<INumberProps> = (props) => {
 
     return (
         <label>
-            <div>{props.label}:</div>
-            <input
-                className={clsx(styles.number, props.className, parseNumber(strValue) === undefined && styles.bad)}
-                size={6}
-                type='text'
-                value={strValue}
-                onChange={onChange}
-            />
+            <div title={props.tooltip}>{props.label}:</div>
+            <div className={styles.input}>
+                <input
+                    className={clsx(styles.number, props.className, parseNumber(strValue) === undefined && styles.bad)}
+                    size={6}
+                    type='text'
+                    value={strValue}
+                    onChange={onChange}
+                />
+                {props.children}
+            </div>
         </label>
     )
 }
@@ -73,8 +78,9 @@ export const Port: React.FC<IPortProps> = (props) => (
     <Number
         className={props.className}
         label='TCP/IP Port'
-        max={63535}
+        max={65535}
         min={1024}
+        tooltip='1024..65535'
         value={props.port}
         onValue={props.onPort}
     />

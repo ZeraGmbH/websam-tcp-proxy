@@ -5,24 +5,30 @@ import styles from './ip.module.scss'
 
 import { SettingsContext } from '../settings'
 
+const endPointReg = /:\d{1,5}$/
+
 interface IIpProps {
     className?: string
 }
 
 export const Ip: React.FC<IIpProps> = (props) => {
-    const settings = React.useContext(SettingsContext)
+    const [settings, duplicates] = React.useContext(SettingsContext)
 
     const onChange = React.useCallback(
         (ev: React.ChangeEvent<HTMLInputElement>) => settings.update('proxyIp', ev.currentTarget.value),
         [settings]
     )
 
+    const canStart =
+        settings.proxyIp &&
+        Object.values(duplicates).every((c) => c === 1) &&
+        settings.proxies.every((p) => endPointReg.test(p.endPoint))
+
     return (
-        <label className={clsx(styles.ip, props.className)}>
-            <div>
-                Anmelden als (<i>Host für listen()</i>):
-            </div>
-            <input placeholder='(Name oder IP Address)' type='text' value={settings.proxyIp} onChange={onChange} />
-        </label>
+        <fieldset className={clsx(styles.ip, props.className)}>
+            <legend>TCP/IP Server auf</legend>
+            <input placeholder='(Name oder IP Adresse)' type='text' value={settings.proxyIp} onChange={onChange} />
+            <button disabled={!canStart}>Start</button>
+        </fieldset>
     )
 }

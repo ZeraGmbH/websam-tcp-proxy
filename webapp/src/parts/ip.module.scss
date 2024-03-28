@@ -1,9 +1,18 @@
 :local(.ip) {
-    position: relative;
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 2;
 
     > input {
-        margin-top: 0.5em;
         width: 100%;
         padding: 0.2em 0.3em;
+    }
+
+    > button {
+        background: #00ff00;
     }
 }
