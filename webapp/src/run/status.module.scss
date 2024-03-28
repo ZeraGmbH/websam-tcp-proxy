@@ -1,0 +1,19 @@
+:local(.status) {
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
+    justify-content: flex-start;
+    column-gap: 0.5em;
+
+    > :local(.dot) {
+        width: 1em;
+        height: 1em;
+        border-radius: 50%;
+        background: #008000;
+        display: inline-block;
+
+        &:local(.error) {
+            background: #ff0000;
+        }
+    }
+}

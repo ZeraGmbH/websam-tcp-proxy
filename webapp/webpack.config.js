@@ -22,7 +22,7 @@ module.exports = (env) => {
         entry: { index: path.join(__dirname, './src/index.tsx') },
 
         /** Für eine volle node.js Umgebung. */
-        externals: [{ ping: 'commonjs ping' }],
+        externals: [{ ping: 'commonjs ping' }, { net: 'commonjs net' }],
 
         /** Man beachte, dass --env in der package.json explizit gesetzt wird. */
         mode: env.production ? 'production' : 'development',

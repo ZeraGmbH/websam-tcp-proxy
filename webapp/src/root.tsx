@@ -18,11 +18,29 @@ export const Root: React.FC<IRootProps> = (props) => {
 
     const appState = React.useMemo<IAppState>(() => ({}), [])
 
+    const [locked, setLocked] = React.useState(false)
+
+    const testKeyEvent = React.useCallback(
+        (ev: KeyboardEvent) => {
+            if (!locked) return
+
+            ev.preventDefault()
+            ev.stopPropagation()
+        },
+        [locked]
+    )
+
+    React.useEffect(() => {
+        document.addEventListener('keydown', testKeyEvent)
+
+        return () => document.removeEventListener('keydown', testKeyEvent)
+    }, [testKeyEvent])
+
     return (
         <AppState.Provider value={appState}>
             <SettingsContext.Provider value={settings}>
-                <div className={clsx(styles.root, props.className)}>
-                    <Ip />
+                <div className={clsx(styles.root, props.className, locked && styles.locked)}>
+                    <Ip setLock={setLocked} />
                     <Serial />
                     <Pings />
                     <Proxies />

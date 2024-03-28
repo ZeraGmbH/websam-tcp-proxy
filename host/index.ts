@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, protocol } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import { ISerialPortsResponse, TRequestType, TResponse, TTypedRequest } from 'ipc'
 import { join } from 'path'
 
@@ -18,11 +18,6 @@ function startup(): void {
     if (appWindow) {
         return
     }
-
-    /** Nutzung von file:// Referenzen e.g. als src eines IMAGE Tags aktivieren. */
-    protocol.registerFileProtocol('file', (request, callback) =>
-        callback(decodeURIComponent(request.url.replace(/^file:\/\//, '')))
-    )
 
     /** Fenster erstellen. */
     const window = createWindow()
