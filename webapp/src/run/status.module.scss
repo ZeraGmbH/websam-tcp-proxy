@@ -15,5 +15,9 @@
         &:local(.error) {
             background: #ff0000;
         }
+
+        &:local(.warning) {
+            background: #ffa500;
+        }
     }
 }
