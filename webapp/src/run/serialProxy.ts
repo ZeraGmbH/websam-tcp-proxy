@@ -1,99 +1,65 @@
-import { createServer, Server, Socket } from 'net'
+import { Proxy } from './proxy'
 
 import { IConfiguration } from '../settings'
 
-export class SerialProxy {
+/** Klasse zum Aufbau einer TCP/IP Verbindung zu einer seriellen Leitung. */
+export class SerialProxy extends Proxy {
+    /** Die serielle Leitung. */
     private _port?: SerialPort
 
-    private _tcp: Server
-
-    private _client?: Socket
-
+    /** Datenstrom zur seriellen Leitung. */
     private _writer?: WritableStreamDefaultWriter
 
+    /** Datenstrom von der seriellen Leitung. */
     private _reader?: ReadableStreamDefaultReader<Buffer>
 
+    /** Meldet den erfolgreichen Aufbau zur seriellen Leitung. */
     onOpen?(): void
 
-    onClient?(connected: boolean): void
-
-    onData?(clientTotal: number, portTotal: number): void
-
-    private _clientTotal = 0
-
-    private _portTotal = 0
-
     private constructor(private readonly _config: IConfiguration) {
-        this._tcp = createServer()
-
-        this._tcp.on('error', (e) => console.error(e.message))
-
-        this._tcp.on('connection', (client) => {
-            if (this._client) {
-                client.write('already connected\r\n', () => client.end())
-
-                return
-            }
-
-            client.on('close', () => this.setClient())
-
-            client.on('data', this.fromClient)
-
-            this.setClient(client)
-        })
-
-        this._tcp.listen(this.port, _config.proxyIp)
+        /** TCP/IP Server konfigurieren - die seriellen Leitung wird separat verbunden. */
+        super(_config.proxyIp, _config.serial.port ?? 0)
     }
 
-    private setClient(client?: Socket): void {
-        this._client = client
-        this._clientTotal = 0
-
-        this.onClient?.(!!client)
-
-        this.update()
-    }
-
-    private update(): void {
-        this.onData?.(this._clientTotal, this._portTotal)
-    }
-
-    private readonly fromClient = (data: Buffer): void => {
-        this._clientTotal += data.length
-
+    /** Daten des TCP/IP Clients an die serielle Leitung senden. */
+    protected write(data: Buffer): void {
         this._writer?.write(data).catch((e) => console.error(e.message))
-
-        this.update()
     }
 
+    /** Meldet den Namen der seriellen Leitung. */
     get device(): string {
         return this._config.serial.device
     }
 
-    get port(): number {
-        return this._config.serial.port ?? 0
-    }
-
+    /**
+     * Öffnet die Verbindung zur seriellen Leitung.
+     *
+     * @param port Die serielle Verbindung.
+     */
     open(port: SerialPort): void {
-        this._port?.close()
-
         this._port = port
 
+        /** Physikalische Verbindung zur seriellen Leitung herstellen. */
         port.open({ baudRate: 9600, dataBits: 8, parity: 'none', stopBits: 2 })
             .then(() => {
+                /* Datenströme abrufen. */
                 this._reader = port.readable?.getReader()
                 this._writer = port.writable?.getWriter()
 
+                /* Lesevorgang starten. */
                 this.fromPort()
 
+                /* Erfolgreiches Öffnen der Verbindung melden. */
                 this.onOpen?.()
             })
             .catch((e) => console.error(e.message))
     }
 
+    /** Daten von der seriellen Leitung entgegen nehmen. */
     private async fromPort(): Promise<void> {
         for (;;)
             try {
+                /** Nächsten Datenblock einlesen und prüfen. */
                 const data = await this._reader?.read()
 
                 if (data?.done !== false) break
@@ -102,22 +68,17 @@ export class SerialProxy {
 
                 if (!buf?.length) break
 
-                this._portTotal += buf.length
-
-                this.update()
-
-                try {
-                    this._client?.write(buf)
-                } catch (e) {
-                    console.error(e.message)
-                }
+                /** Daten an den möglicherweise verbundenen TCP/IP Client durchreichen. */
+                this.toClient(buf)
             } catch (e) {
+                /** Bei der Fehlerbehandlung ist noch reichlich Luft nach oben. */
                 console.error(e.message)
 
                 break
             }
     }
 
+    /** Nutzung der seriellen Verbindung beenden. */
     shutdown(): void {
         try {
             this._reader?.releaseLock()
@@ -137,19 +98,16 @@ export class SerialProxy {
             console.error(e.message)
         }
 
-        try {
-            this._client?.destroy()
-        } catch (e) {
-            console.error(e.message)
-        }
-
-        try {
-            this._tcp.close()
-        } catch (e) {
-            console.error(e.message)
-        }
+        /** TCP/IP Server beenden. */
+        super.shutdown()
     }
 
+    /**
+     * Erstellt eine neue Verbindung zu einer seriellen Leitung her.
+     *
+     * @param config Konfiguration.
+     * @returns Verbindung, sofern eine solche laut Konfiguration erwünscht ist.
+     */
     static create(config: IConfiguration): SerialProxy | undefined {
         const { serial } = config
 
