@@ -16,19 +16,25 @@ export class SerialProxy extends Proxy {
     /** Meldet den erfolgreichen Aufbau zur seriellen Leitung. */
     onOpen?(): void
 
-    private constructor(private readonly _config: IConfiguration) {
+    /**
+     * Initialisiert eine neue Verbindung.
+     *
+     * @param server Rechnername für den TCP/IP Server.
+     * @param port TCP/IP Port.
+     * @param device Name der seriellen Leitung.
+     */
+    private constructor(
+        server: string,
+        port: number,
+        public readonly device: string
+    ) {
         /** TCP/IP Server konfigurieren - die seriellen Leitung wird separat verbunden. */
-        super(_config.proxyIp, _config.serial.port ?? 0)
+        super(server, port)
     }
 
     /** Daten des TCP/IP Clients an die serielle Leitung senden. */
     protected write(data: Buffer): void {
         this._writer?.write(data).catch((e) => console.error(e.message))
-    }
-
-    /** Meldet den Namen der seriellen Leitung. */
-    get device(): string {
-        return this._config.serial.device
     }
 
     /**
@@ -113,6 +119,6 @@ export class SerialProxy extends Proxy {
 
         if (!serial.device || serial.port == null || serial.port < 1024 || serial.port > 65535) return
 
-        return new SerialProxy(config)
+        return new SerialProxy(config.proxyIp, serial.port, serial.device)
     }
 }

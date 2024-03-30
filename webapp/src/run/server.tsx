@@ -3,6 +3,9 @@ import * as React from 'react'
 
 import { Serial } from './serial'
 import styles from './server.module.scss'
+import { Tcp } from './tcp'
+
+import { SettingsContext } from '../settings'
 
 interface IServerProps {
     className?: string
@@ -10,6 +13,8 @@ interface IServerProps {
 }
 
 export const Server: React.FC<IServerProps> = (props) => {
+    const [settings] = React.useContext(SettingsContext)
+
     const { onClose } = props
 
     return (
@@ -17,6 +22,9 @@ export const Server: React.FC<IServerProps> = (props) => {
             <div>
                 <h1>TCP/IP Server gestartet</h1>
                 <Serial />
+                {settings.proxies.map((p, i) => (
+                    <Tcp key={i} index={i} />
+                ))}
                 <button onClick={onClose}>Stop</button>
             </div>
         </div>
