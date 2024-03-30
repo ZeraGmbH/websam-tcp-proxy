@@ -1,6 +1,7 @@
 import { clsx } from 'clsx'
 import * as React from 'react'
 
+import { Ping } from './ping'
 import { Serial } from './serial'
 import styles from './server.module.scss'
 import { Tcp } from './tcp'
@@ -22,8 +23,11 @@ export const Server: React.FC<IServerProps> = (props) => {
             <div>
                 <h1>TCP/IP Server gestartet</h1>
                 <Serial />
-                {settings.proxies.map((p, i) => (
+                {settings.proxies.map((_p, i) => (
                     <Tcp key={i} index={i} />
+                ))}
+                {settings.pingHosts.map((ip) => (
+                    <Ping key={ip} ip={ip} />
                 ))}
                 <button onClick={onClose}>Stop</button>
             </div>

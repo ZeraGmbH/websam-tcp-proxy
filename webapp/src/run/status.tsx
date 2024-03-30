@@ -6,7 +6,7 @@ import styles from './status.module.scss'
 interface IStatusProps {
     children?: React.ReactNode
     className?: string
-    count: number
+    count?: number
     error?: boolean
     warning?: boolean
 }
