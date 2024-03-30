@@ -11,7 +11,9 @@
 .npmrc
 
 /build
-/dist
+/dist/**/*
+!/dist/tcp-proxy.exe
+
 /www
 
 /.env
