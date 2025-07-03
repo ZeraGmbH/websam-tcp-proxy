@@ -50,7 +50,7 @@
     "react-refresh": "^0.17.0",
     "react-refresh-typescript": "^2.0.9",
     "rimraf": "^6.0.1",
-    "sass": "^1.72.0",
+    "sass": "^1.89.2",
     "sass-loader": "^14.1.1",
     "stylelint": "^16.21.1",
     "svg-inline-loader": "^0.8.2",
