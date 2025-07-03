@@ -26,9 +26,6 @@
     },
     "description": "Proxy für TCP/IP Verbindungen",
     "devDependencies": {
-        "@insynergie/eslint-config": "^3.0.0",
-        "@insynergie/prettier-config": "^2.0.0",
-        "@insynergie/stylelint-config": "^3.2.0",
         "@pmmmwh/react-refresh-webpack-plugin": "^0.5.11",
         "@types/debug": "^4.1.12",
         "@types/dom-serial": "^1.0.6",
@@ -63,13 +60,9 @@
         "webpack-cli": "^5.1.4",
         "webpack-dev-server": "^5.0.4"
     },
-    "eslintConfig": {
-        "extends": "@insynergie"
-    },
     "license": "MIT",
     "main": "build/index.js",
     "name": "tcp-proxy",
-    "prettier": "@insynergie/prettier-config",
     "scripts": {
         "build": "rimraf build && npm run --scripts-prepend-node-path true build:host && npm run --scripts-prepend-node-path true build:app",
         "build:app": "rimraf build/dist && cd webapp && webpack build --env production",
@@ -81,7 +74,6 @@
         "watch:host": "tsc --watch"
     },
     "stylelint": {
-        "extends": "@insynergie/stylelint-config",
         "rules": {
             "property-no-vendor-prefix": null,
             "value-no-vendor-prefix": null
