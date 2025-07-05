@@ -1,97 +1,115 @@
-import { clsx } from 'clsx'
-import { ISerialPortsResponse } from 'ipc'
-import * as React from 'react'
+import { clsx } from "clsx";
+import { ISerialPortsResponse } from "ipc";
+import * as React from "react";
 
-import { Port } from './number'
-import styles from './serial.module.scss'
+import { Port } from "./number";
+import styles from "./serial.module.scss";
 
-import { electronHost } from '../electron'
-import { SettingsContext } from '../settings'
+import { electronHost } from "../electron";
+import { SettingsContext } from "../settings";
 
 interface ISerialProps {
-    className?: string
+  className?: string;
 }
 
 export const Serial: React.FC<ISerialProps> = (props) => {
-    const [settings] = React.useContext(SettingsContext)
+  const [settings] = React.useContext(SettingsContext);
 
-    const [selector, setSelector] = React.useState(false)
-    const [portNames, setPortNames] = React.useState<string[]>([])
+  const [selector, setSelector] = React.useState(false);
+  const [portNames, setPortNames] = React.useState<string[]>([]);
 
-    const updatePortNames = React.useCallback((res: ISerialPortsResponse) => setPortNames(res.portNames), [])
+  const updatePortNames = React.useCallback(
+    (res: ISerialPortsResponse) => setPortNames(res.portNames),
+    []
+  );
 
-    React.useEffect(() => {
-        electronHost.addListener('serial-response', updatePortNames)
+  React.useEffect(() => {
+    electronHost.addListener("serial-response", updatePortNames);
 
-        return () => electronHost.removeListener('serial-response', updatePortNames)
-    }, [updatePortNames])
+    return () =>
+      electronHost.removeListener("serial-response", updatePortNames);
+  }, [updatePortNames]);
 
-    const onChoose = React.useCallback(() => {
-        setSelector((open) => {
-            if (!open) navigator.serial.requestPort().catch((e) => console.error(e.message))
+  const onChoose = React.useCallback(() => {
+    setSelector((open) => {
+      if (!open)
+        navigator.serial.requestPort().catch((e) => console.error(e.message));
 
-            return !open
-        })
-    }, [])
+      return !open;
+    });
+  }, []);
 
-    const onDevice = React.useCallback(
-        (ev: React.ChangeEvent<HTMLInputElement>) =>
-            settings.update('serial', { ...settings.serial, device: ev.target.value }),
-        [settings]
-    )
+  const onDevice = React.useCallback(
+    (ev: React.ChangeEvent<HTMLInputElement>) =>
+      settings.update("serial", {
+        ...settings.serial,
+        device: ev.target.value,
+      }),
+    [settings]
+  );
 
-    const onSelect = React.useCallback(
-        (device: string) => {
-            settings.update('serial', { ...settings.serial, device })
+  const onSelect = React.useCallback(
+    (device: string) => {
+      settings.update("serial", { ...settings.serial, device });
 
-            setSelector(false)
-        },
-        [settings]
-    )
+      setSelector(false);
+    },
+    [settings]
+  );
 
-    const onPort = React.useCallback(
-        (port: number | null) => settings.update('serial', { ...settings.serial, port }),
-        [settings]
-    )
+  const onPort = React.useCallback(
+    (port: number | null) =>
+      settings.update("serial", { ...settings.serial, port }),
+    [settings]
+  );
 
-    return (
-        <fieldset className={clsx(styles.serial, props.className)}>
-            <legend>Lokale serielle Schnittstelle</legend>
-            <div>
-                <label>
-                    <input placeholder='(Gerätename)' type='text' value={settings.serial.device} onChange={onDevice} />
-                    &nbsp;
-                    <span className={styles.selector}>
-                        <button onClick={onChoose}>...</button>
-                        {selector && (
-                            <div className={styles.chooser}>
-                                <h1>Bekannte Geräte</h1>
-                                <div className={styles.list}>
-                                    {portNames.map((n) => (
-                                        <Selector key={n} name={n} selected={onSelect} />
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </span>
-                </label>
-                <div className={styles.port}>
-                    <Port port={settings.serial.port} onPort={onPort} />
+  var ports = Array.isArray(settings.serial)
+    ? settings.serial
+    : [settings.serial];
+
+  return (
+    <fieldset className={clsx(styles.serial, props.className)}>
+      <legend>Lokale serielle Schnittstelle</legend>
+      <div>
+        <label>
+          <input
+            placeholder="(Gerätename)"
+            type="text"
+            value={ports[0].device}
+            onChange={onDevice}
+          />
+          &nbsp;
+          <span className={styles.selector}>
+            <button onClick={onChoose}>...</button>
+            {selector && (
+              <div className={styles.chooser}>
+                <h1>Bekannte Geräte</h1>
+                <div className={styles.list}>
+                  {portNames.map((n) => (
+                    <Selector key={n} name={n} selected={onSelect} />
+                  ))}
                 </div>
-            </div>
-        </fieldset>
-    )
-}
+              </div>
+            )}
+          </span>
+        </label>
+        <div className={styles.port}>
+          <Port port={ports[0].port} onPort={onPort} />
+        </div>
+      </div>
+    </fieldset>
+  );
+};
 
 interface ISelectorProps {
-    name: string
-    selected(name: string): void
+  name: string;
+  selected(name: string): void;
 }
 
 const Selector: React.FC<ISelectorProps> = (props) => {
-    const { name, selected } = props
+  const { name, selected } = props;
 
-    const onSelect = React.useCallback(() => selected(name), [name, selected])
+  const onSelect = React.useCallback(() => selected(name), [name, selected]);
 
-    return <div onClick={onSelect}>{name}</div>
-}
+  return <div onClick={onSelect}>{name}</div>;
+};

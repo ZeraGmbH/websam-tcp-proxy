@@ -18,7 +18,7 @@ export interface IConfigurationData {
     pingInterval: number | null
     proxies: IProxyConfiguration[]
     proxyIp: string
-    serial: ISerialConfiguration
+    serial: ISerialConfiguration|ISerialConfiguration[]
 }
 
 export interface IConfiguration extends IConfigurationData {
