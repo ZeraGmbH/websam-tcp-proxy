@@ -11,7 +11,7 @@ const extractCss = require("mini-css-extract-plugin");
 
 /** Nachladen bei Änderungen. */
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
-const ReactRefreshTypeScript = require("react-refresh-typescript");
+const { default: ReactRefreshTypeScript } = require("react-refresh-typescript");
 
 /** Benamung von CSS Modulen. */
 const cssModules = {
