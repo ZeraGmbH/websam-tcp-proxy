@@ -1,40 +1,75 @@
-declare module 'ipc' {
-    interface IConfigRequest {
-        type: 'config-request'
-    }
+declare module "ipc" {
+  interface IProxyConfiguration {
+    endPoint: string;
+    port: number;
+  }
 
-    interface IConfigResponse {
-        configName: string
-        type: 'config-response'
-    }
+  interface IConfigRequest {
+    type: "config-request";
+  }
 
-    interface ISerialPortsRequest {
-        type: 'serial-request'
-    }
+  interface IConfigResponse {
+    configName: string;
+    type: "config-response";
+  }
 
-    interface ISerialPortsResponse {
-        portNames: string[]
-        type: 'serial-response'
-    }
+  interface ISerialPortsRequest {
+    type: "serial-request";
+  }
 
-    interface ISetSerialPortRequest {
-        portName: string
-        type: 'port-request'
-    }
+  interface ISerialPortsResponse {
+    portNames: string[];
+    type: "serial-response";
+  }
 
-    interface ISetSerialPortResponse {
-        type: 'port-response'
-    }
+  interface ISetSerialPortRequest {
+    portName: string;
+    type: "port-request";
+  }
 
-    type TRequest = IConfigRequest | ISerialPortsRequest | ISetSerialPortRequest
+  interface ISetSerialPortResponse {
+    type: "port-response";
+  }
 
-    type TRequestType = TRequest['type']
+  interface IOpenTcpRequest {
+    proxyIp: string;
+    tcp: IProxyConfiguration;
+    type: "open-tcp-request";
+  }
 
-    type TResponse = IConfigResponse | ISerialPortsResponse | ISetSerialPortResponse
+  interface IOpenTcpResponse {
+    tcpId: string;
+    type: "open-tcp-response";
+  }
 
-    type TResponseType = TResponse['type']
+  interface ICloseTcpRequest {
+    tcpId: string;
+    type: "close-tcp-request";
+  }
 
-    type TTypedRequest<T extends TRequestType> = TRequest & { type: T }
+  interface ICloseTcpResponse {
+    type: "close-tcp-response";
+  }
 
-    type TTypedResponse<T extends TResponseType> = TResponse & { type: T }
+  type TRequest =
+    | ICloseTcpRequest
+    | IConfigRequest
+    | IOpenTcpRequest
+    | ISerialPortsRequest
+    | ISetSerialPortRequest;
+
+  type TRequestType = TRequest["type"];
+
+  type TResponse =
+    | ICloseTcpResponse
+    | IConfigResponse
+    | IOpenTcpResponse
+    | ISerialPortsResponse
+    | ISetSerialPortResponse;
+
+  type TResponseType = TResponse["type"];
+
+  type TTypedRequest<T extends TRequestType> = TRequest & { type: T };
+
+  type TTypedResponse<T extends TResponseType> = TResponse & { type: T };
 }
