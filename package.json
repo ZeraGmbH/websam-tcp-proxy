@@ -64,11 +64,11 @@
   "main": "build/index.js",
   "name": "tcp-proxy",
   "scripts": {
-    "build": "rimraf build && npm run --scripts-prepend-node-path true build:host && npm run --scripts-prepend-node-path true build:app",
+    "build": "rimraf build && yarn build:host && yarn build:app",
     "build:app": "rimraf build/dist && cd webapp && webpack build --env production",
     "build:host": "tsc",
-    "deploy:linux": "rimraf dist && npm run --scripts-prepend-node-path=true build && electron-builder --linux",
-    "deploy:windows": "rimraf dist && npm run --scripts-prepend-node-path=true build && electron-builder --x64 --win",
+    "deploy:linux": "rimraf dist && yarn build && electron-builder --linux",
+    "deploy:windows": "rimraf dist && yarn build && electron-builder --x64 --win",
     "start": "cross-env NODE_ENV=production node node_modules/electron/cli.js build/index",
     "watch:app": "cd webapp && webpack serve --hot",
     "watch:host": "tsc --watch"
