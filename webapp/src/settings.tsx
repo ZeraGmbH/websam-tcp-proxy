@@ -1,19 +1,14 @@
-import { IConfigRequest, IConfigResponse, IProxyConfiguration } from "ipc";
+import * as ipc from "ipc";
 import * as React from "react";
 
 import { electronHost } from "./electron";
 
-export interface ISerialConfiguration {
-  device: string;
-  port: number | null;
-}
-
 export interface IConfigurationData {
   pingHosts: string[];
   pingInterval: number | null;
-  proxies: IProxyConfiguration[];
+  proxies: ipc.IProxyConfiguration[];
   proxyIp: string;
-  serial: ISerialConfiguration | ISerialConfiguration[];
+  serial: ipc.ISerialConfiguration | ipc.ISerialConfiguration[];
 }
 
 export interface IConfiguration extends IConfigurationData {
@@ -40,7 +35,7 @@ export function useSettings(): [
     React.useState<IConfigurationData>(initialConfig);
   const [config, setConfig] = React.useState("");
 
-  function loadConfig(res: IConfigResponse): void {
+  function loadConfig(res: ipc.IConfigResponse): void {
     setConfig(res.configName);
 
     setSettings({
@@ -58,7 +53,7 @@ export function useSettings(): [
   }, []);
 
   React.useEffect(
-    () => electronHost.send<IConfigRequest>({ type: "config-request" }),
+    () => electronHost.send<ipc.IConfigRequest>({ type: "config-request" }),
     []
   );
 

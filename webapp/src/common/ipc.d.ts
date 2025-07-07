@@ -4,6 +4,11 @@ declare module "ipc" {
     port: number;
   }
 
+  interface ISerialConfiguration {
+    device: string;
+    port: number | null;
+  }
+
   interface IConfigRequest {
     type: "config-request";
   }

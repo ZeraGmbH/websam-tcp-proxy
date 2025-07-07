@@ -1,6 +1,7 @@
 import { Proxy } from "./proxy";
 
-import { IConfiguration, ISerialConfiguration } from "../settings";
+import { ISerialConfiguration } from "ipc";
+import { IConfiguration } from "../settings";
 
 /** Klasse zum Aufbau einer TCP/IP Verbindung zu einer seriellen Leitung. */
 export class SerialProxy extends Proxy {
