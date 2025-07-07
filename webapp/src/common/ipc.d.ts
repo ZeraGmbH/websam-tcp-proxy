@@ -38,18 +38,9 @@ declare module "ipc" {
     type: "open-tcp-request";
   }
 
-  interface IOpenTcpResponse {
-    success: boolean;
-    type: "open-tcp-response";
-  }
-
   interface ICloseTcpRequest {
     tcpId: string;
     type: "close-tcp-request";
-  }
-
-  interface ICloseTcpResponse {
-    type: "close-tcp-response";
   }
 
   interface IConnectNotification {
@@ -81,9 +72,7 @@ declare module "ipc" {
   type TRequestType = TRequest["type"];
 
   type TResponse =
-    | ICloseTcpResponse
     | IConfigResponse
-    | IOpenTcpResponse
     | ISerialPortsResponse
     | ISetSerialPortResponse;
 

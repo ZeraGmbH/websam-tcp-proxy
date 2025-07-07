@@ -143,27 +143,17 @@ export async function openTcp(
         type: "notify-data",
       });
   }
-
-  reply<ipc.IOpenTcpResponse>({
-    success: !!proxy,
-    type: "open-tcp-response",
-  });
 }
 
 export async function closeTcp(
   _win: BrowserWindow,
-  request: ipc.ICloseTcpRequest,
-  reply: <T extends ipc.TResponse>(response: T) => void
+  request: ipc.ICloseTcpRequest
 ): Promise<void> {
   const proxy = proxies[request.tcpId];
 
-  if (proxy) {
-    delete proxies[request.tcpId];
+  if (!proxy) return;
 
-    proxy.shutdown();
-  }
+  delete proxies[request.tcpId];
 
-  reply<ipc.ICloseTcpResponse>({
-    type: "close-tcp-response",
-  });
+  proxy.shutdown();
 }
