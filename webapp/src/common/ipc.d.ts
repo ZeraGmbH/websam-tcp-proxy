@@ -32,13 +32,14 @@ declare module "ipc" {
   }
 
   interface IOpenTcpRequest {
+    tcpId: string;
     proxyIp: string;
     tcp: IProxyConfiguration;
     type: "open-tcp-request";
   }
 
   interface IOpenTcpResponse {
-    tcpId: string;
+    success: boolean;
     type: "open-tcp-response";
   }
 
@@ -49,6 +50,25 @@ declare module "ipc" {
 
   interface ICloseTcpResponse {
     type: "close-tcp-response";
+  }
+
+  interface IConnectNotification {
+    id: string;
+    connected: boolean;
+    type: "notify-connect";
+  }
+
+  interface IDataNotification {
+    id: string;
+    received: number;
+    sent: number;
+    type: "notify-data";
+  }
+
+  interface ITcpOpenNotification {
+    id: string;
+    opened: boolean;
+    type: "notify-tcp-open";
   }
 
   type TRequest =
@@ -69,7 +89,18 @@ declare module "ipc" {
 
   type TResponseType = TResponse["type"];
 
+  type TNotification =
+    | IConnectNotification
+    | IDataNotification
+    | ITcpOpenNotification;
+
+  type TNotificationType = TNotification["type"];
+
   type TTypedRequest<T extends TRequestType> = TRequest & { type: T };
 
   type TTypedResponse<T extends TResponseType> = TResponse & { type: T };
+
+  type TTypedNotification<T extends TNotificationType> = TNotification & {
+    type: T;
+  };
 }

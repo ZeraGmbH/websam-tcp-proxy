@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { BrowserWindow } from "electron";
-import { TRequestType, TResponse, TTypedRequest } from "ipc";
+import { TNotification, TRequestType, TResponse, TTypedRequest } from "ipc";
 
 import { getConfigName } from "./configName";
 import { setSerialPort } from "./serialPort";
@@ -9,7 +9,7 @@ import { getSerialPorts } from "./serialPorts";
 import { closeTcp, openTcp } from "./tcpProxy";
 
 /** Signatur für eine Meldung vom Electron Host an die Anwendung. */
-type TReply = (response: TResponse) => void;
+type TReply = (response: TResponse | TNotification) => void;
 
 /** Signatur für die Bearbeitung einer Meldung von der Anwendung an den Electron Host. */
 export type THandler<T extends TRequestType> = (

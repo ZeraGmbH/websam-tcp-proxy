@@ -2,7 +2,6 @@ import { Socket } from "net";
 
 import { BrowserWindow } from "electron";
 import * as ipc from "ipc";
-import { v4 as uuid } from "uuid";
 import { Proxy } from "./proxy";
 
 /** Muster zur Erkennung eines Endpunkts bestehend aus Rechnername oder IP Adresse und TCP/IP Port. */
@@ -115,16 +114,38 @@ const proxies: Record<string, TcpProxy> = {};
 export async function openTcp(
   _win: BrowserWindow,
   request: ipc.IOpenTcpRequest,
-  reply: <T extends ipc.TResponse>(response: T) => void
+  reply: <T extends ipc.TResponse | ipc.TNotification>(response: T) => void
 ): Promise<void> {
   const proxy = TcpProxy.create(request.proxyIp, request.tcp);
 
-  let tcpId = "";
+  if (proxy) {
+    proxies[request.tcpId] = proxy;
 
-  if (proxy) proxies[(tcpId = uuid())] = proxy;
+    proxy.onClient = (connected) =>
+      reply<ipc.IConnectNotification>({
+        id: request.tcpId,
+        connected,
+        type: "notify-connect",
+      });
+
+    proxy.onOpen = (opened) =>
+      reply<ipc.ITcpOpenNotification>({
+        id: request.tcpId,
+        opened,
+        type: "notify-tcp-open",
+      });
+
+    proxy.onData = (received, sent) =>
+      reply<ipc.IDataNotification>({
+        id: request.tcpId,
+        received,
+        sent,
+        type: "notify-data",
+      });
+  }
 
   reply<ipc.IOpenTcpResponse>({
-    tcpId,
+    success: !!proxy,
     type: "open-tcp-response",
   });
 }
