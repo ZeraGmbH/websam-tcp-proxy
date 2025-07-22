@@ -27,15 +27,6 @@ declare module "ipc" {
     type: "serial-response";
   }
 
-  interface ISetSerialPortRequest {
-    portName: string;
-    type: "port-request";
-  }
-
-  interface ISetSerialPortResponse {
-    type: "port-response";
-  }
-
   interface IOpenTcpRequest {
     tcpId: string;
     proxyIp: string;
@@ -67,25 +58,41 @@ declare module "ipc" {
     type: "notify-tcp-open";
   }
 
+  interface IOpenSerialRequest {
+    port: ISerialConfiguration;
+    portId: string;
+    proxyIp: string;
+    type: "open-serial-request";
+  }
+
+  interface ICloseSerialRequest {
+    portId: string;
+    type: "close-serial-request";
+  }
+
+  interface ISerialOpenNotification {
+    id: string;
+    type: "notify-serial-open";
+  }
+
   type TRequest =
+    | ICloseSerialRequest
     | ICloseTcpRequest
     | IConfigRequest
+    | IOpenSerialRequest
     | IOpenTcpRequest
-    | ISerialPortsRequest
-    | ISetSerialPortRequest;
+    | ISerialPortsRequest;
 
   type TRequestType = TRequest["type"];
 
-  type TResponse =
-    | IConfigResponse
-    | ISerialPortsResponse
-    | ISetSerialPortResponse;
+  type TResponse = IConfigResponse | ISerialPortsResponse;
 
   type TResponseType = TResponse["type"];
 
   type TNotification =
     | IConnectNotification
     | IDataNotification
+    | ISerialOpenNotification
     | ITcpOpenNotification;
 
   type TNotificationType = TNotification["type"];

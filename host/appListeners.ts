@@ -4,8 +4,8 @@ import { BrowserWindow } from "electron";
 import { TNotification, TRequestType, TResponse, TTypedRequest } from "ipc";
 
 import { getConfigName } from "./configName";
-import { setSerialPort } from "./serialPort";
 import { getSerialPorts } from "./serialPorts";
+import { closeSerial, openSerial } from "./serialProxy";
 import { closeTcp, openTcp } from "./tcpProxy";
 
 /** Signatur für eine Meldung vom Electron Host an die Anwendung. */
@@ -20,9 +20,10 @@ export type THandler<T extends TRequestType> = (
 
 /** Handler für alle Nachrichten, die von der Anwendung an den Host gesendet werden können. */
 export const listeners: { [T in TRequestType]: THandler<T> } = {
+  "close-serial-request": closeSerial,
   "close-tcp-request": closeTcp,
   "config-request": getConfigName,
+  "open-serial-request": openSerial,
   "open-tcp-request": openTcp,
-  "port-request": setSerialPort,
   "serial-request": getSerialPorts,
 };
