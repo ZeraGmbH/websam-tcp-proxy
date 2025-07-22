@@ -1,54 +1,51 @@
 :local(.serial) {
+  position: relative;
+  height: fit-content;
+  display: grid;
+  grid-template-columns: auto auto auto;
+  align-items: center;
+  justify-content: flex-start;
+  column-gap: 1em;
+  margin: 0.2em 0 0 2em;
+
+  > :local(.port) > label {
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
+    column-gap: 0.5em;
+  }
+
+  :local(.selector) {
     position: relative;
-    z-index: 1;
 
-    > div {
-        height: fit-content;
+    > :local(.chooser) {
+      position: absolute;
+      background: #ffffff;
+      top: calc(100% - 0.5em);
+      left: calc(100% - 0.5em);
+      white-space: nowrap;
+      padding: 0 0.5em 0.5em 0.5em;
+      overflow: hidden;
+      border-radius: 0.5em;
+      box-shadow: 2px 2px 10px #444444;
+
+      > :local(.list) {
+        max-height: 15em;
+        overflow: auto;
         display: grid;
-        grid-template-columns: auto auto;
+        grid-template-columns: repeat(5, auto);
+        justify-content: center;
         align-items: center;
-        justify-content: flex-start;
-        column-gap: 1em;
 
-        > :local(.port) > label {
-            display: grid;
-            grid-auto-flow: column;
-            align-items: center;
-            column-gap: 0.5em;
+        > div {
+          padding: 0.3em 0.5em;
+          border-radius: 0.3em;
+
+          &:hover {
+            background: #eeeeee;
+          }
         }
-
-        :local(.selector) {
-            position: relative;
-
-            > :local(.chooser) {
-                position: absolute;
-                background: #ffffff;
-                top: calc(100% - 0.5em);
-                left: calc(100% - 0.5em);
-                white-space: nowrap;
-                padding: 0 0.5em 0.5em 0.5em;
-                overflow: hidden;
-                border-radius: 0.5em;
-                box-shadow: 2px 2px 10px #444444;
-
-                > :local(.list) {
-                    max-height: 15em;
-                    overflow: auto;
-                    display: grid;
-                    grid-template-columns: repeat(5, auto);
-                    justify-content: center;
-                    align-items: center;
-
-                    > div {
-                        padding: 0.3em 0.5em;
-                        border-radius: 0.3em;
-
-                        &:hover {
-                            background: #eeeeee;
-                        }
-                    }
-                }
-            }
-        }
+      }
     }
+  }
 }

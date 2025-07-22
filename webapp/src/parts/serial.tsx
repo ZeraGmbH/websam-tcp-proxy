@@ -1,5 +1,5 @@
 import { clsx } from "clsx";
-import { ISerialPortsRequest, ISerialPortsResponse } from "ipc";
+import * as ipc from "ipc";
 import * as React from "react";
 
 import { Port } from "./number";
@@ -10,23 +10,26 @@ import { SettingsContext } from "../settings";
 
 interface ISerialProps {
   className?: string;
+  index: number;
 }
 
 export const Serial: React.FC<ISerialProps> = (props) => {
+  const { index } = props;
+
   const [settings] = React.useContext(SettingsContext);
 
   const [selector, setSelector] = React.useState(false);
   const [portNames, setPortNames] = React.useState<string[]>([]);
 
   const updatePortNames = React.useCallback(
-    (res: ISerialPortsResponse) => setPortNames(res.portNames),
+    (res: ipc.ISerialPortsResponse) => setPortNames(res.portNames),
     []
   );
 
   React.useEffect(() => {
     electronHost.addListener("serial-response", updatePortNames);
 
-    electronHost.send<ISerialPortsRequest>({ type: "serial-request" });
+    electronHost.send<ipc.ISerialPortsRequest>({ type: "serial-request" });
 
     return () =>
       electronHost.removeListener("serial-response", updatePortNames);
@@ -34,65 +37,85 @@ export const Serial: React.FC<ISerialProps> = (props) => {
 
   const onChoose = React.useCallback(() => setSelector((open) => !open), []);
 
+  const updateSerial = React.useCallback(
+    <TKey extends keyof ipc.ISerialConfiguration>(
+      prop: TKey,
+      value: ipc.ISerialConfiguration[TKey]
+    ) => {
+      const ports = Array.isArray(settings.serial)
+        ? [...settings.serial]
+        : [settings.serial];
+
+      ports[index] = { ...ports[index], [prop]: value };
+
+      settings.update("serial", ports);
+    },
+    [settings, index]
+  );
+
   const onDevice = React.useCallback(
     (ev: React.ChangeEvent<HTMLInputElement>) =>
-      settings.update("serial", {
-        ...settings.serial,
-        device: ev.target.value,
-      }),
-    [settings]
+      updateSerial("device", ev.target.value),
+    [updateSerial]
   );
 
   const onSelect = React.useCallback(
     (device: string) => {
-      settings.update("serial", { ...settings.serial, device });
+      updateSerial("device", device);
 
       setSelector(false);
     },
-    [settings]
+    [updateSerial]
   );
 
   const onPort = React.useCallback(
-    (port: number | null) =>
-      settings.update("serial", { ...settings.serial, port }),
-    [settings]
+    (port: number | null) => updateSerial("port", port),
+    [updateSerial]
   );
 
-  var ports = Array.isArray(settings.serial)
+  const onDelete = React.useCallback(() => {
+    const ports = Array.isArray(settings.serial)
+      ? [...settings.serial]
+      : [settings.serial];
+
+    ports.splice(index, 1);
+
+    settings.update("serial", ports);
+  }, [settings, index]);
+
+  const ports = Array.isArray(settings.serial)
     ? settings.serial
     : [settings.serial];
 
   return (
-    <fieldset className={clsx(styles.serial, props.className)}>
-      <legend>Lokale serielle Schnittstelle</legend>
-      <div>
-        <label>
-          <input
-            placeholder="(Gerätename)"
-            type="text"
-            value={ports[0].device}
-            onChange={onDevice}
-          />
-          &nbsp;
-          <span className={styles.selector}>
-            <button onClick={onChoose}>...</button>
-            {selector && (
-              <div className={styles.chooser}>
-                <h1>Bekannte Geräte</h1>
-                <div className={styles.list}>
-                  {portNames.map((n) => (
-                    <Selector key={n} name={n} selected={onSelect} />
-                  ))}
-                </div>
+    <div className={clsx(styles.serial, props.className)}>
+      <button onClick={onDelete}>Löschen</button>
+      <label>
+        <input
+          placeholder="(Gerätename)"
+          type="text"
+          value={ports[index].device}
+          onChange={onDevice}
+        />
+        &nbsp;
+        <span className={styles.selector}>
+          <button onClick={onChoose}>...</button>
+          {selector && (
+            <div className={styles.chooser}>
+              <h1>Bekannte Geräte</h1>
+              <div className={styles.list}>
+                {portNames.map((n) => (
+                  <Selector key={n} name={n} selected={onSelect} />
+                ))}
               </div>
-            )}
-          </span>
-        </label>
-        <div className={styles.port}>
-          <Port port={ports[0].port} onPort={onPort} />
-        </div>
+            </div>
+          )}
+        </span>
+      </label>
+      <div className={styles.port}>
+        <Port port={ports[index].port} onPort={onPort} />
       </div>
-    </fieldset>
+    </div>
   );
 };
 

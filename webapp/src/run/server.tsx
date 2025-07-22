@@ -29,7 +29,6 @@ export const Server: React.FC<IServerProps> = (props) => {
         {ports.map((_p, i) => (
           <Serial key={i} index={i} />
         ))}
-
         {settings.proxies.map((_p, i) => (
           <Tcp key={i} index={i} />
         ))}
