@@ -1,5 +1,5 @@
 import { clsx } from "clsx";
-import { ISerialPortsResponse } from "ipc";
+import { ISerialPortsRequest, ISerialPortsResponse } from "ipc";
 import * as React from "react";
 
 import { Port } from "./number";
@@ -26,18 +26,13 @@ export const Serial: React.FC<ISerialProps> = (props) => {
   React.useEffect(() => {
     electronHost.addListener("serial-response", updatePortNames);
 
+    electronHost.send<ISerialPortsRequest>({ type: "serial-request" });
+
     return () =>
       electronHost.removeListener("serial-response", updatePortNames);
   }, [updatePortNames]);
 
-  const onChoose = React.useCallback(() => {
-    setSelector((open) => {
-      if (!open)
-        navigator.serial.requestPort().catch((e) => console.error(e.message));
-
-      return !open;
-    });
-  }, []);
+  const onChoose = React.useCallback(() => setSelector((open) => !open), []);
 
   const onDevice = React.useCallback(
     (ev: React.ChangeEvent<HTMLInputElement>) =>
