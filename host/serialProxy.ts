@@ -65,6 +65,7 @@ export class SerialProxy extends Proxy {
 
         /** Daten an den möglicherweise verbundenen TCP/IP Client durchreichen. */
         if (buf?.length) this.toClient(buf);
+        else await new Promise((success) => setTimeout(success, 100));
       } catch (e) {
         /** Bei der Fehlerbehandlung ist noch reichlich Luft nach oben. */
         console.error(e.message);
