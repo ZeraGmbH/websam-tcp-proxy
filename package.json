@@ -44,6 +44,7 @@
     "debug": "^4.4.1",
     "electron": "^37.2.3",
     "electron-builder": "^26.0.12",
+    "electron-rebuild": "^3.2.9",
     "eslint": "^9.31.0",
     "mini-css-extract-plugin": "^2.9.2",
     "ncp": "^2.0.0",
@@ -70,8 +71,8 @@
     "build": "rimraf build && yarn build:host && yarn build:app",
     "build:app": "rimraf build/dist && cd webapp && webpack build --env production",
     "build:host": "tsc",
-    "deploy:linux": "rimraf dist && yarn build && electron-builder --linux",
-    "deploy:windows": "rimraf dist && yarn build && electron-builder --x64 --win",
+    "deploy:linux": "electron-rebuild install-app-deps && rimraf dist && yarn build && electron-builder --linux",
+    "deploy:windows": "electron-rebuild install-app-deps --platform linux --arch amd64 && rimraf dist && yarn build && electron-builder --x64 --win",
     "start": "cross-env NODE_ENV=production node node_modules/electron/cli.js build/index",
     "watch:app": "cd webapp && webpack serve --hot",
     "watch:host": "tsc --watch"
