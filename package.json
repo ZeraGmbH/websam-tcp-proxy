@@ -72,7 +72,7 @@
     "build:app": "rimraf build/dist && cd webapp && webpack build --env production",
     "build:host": "tsc",
     "deploy:linux": "electron-rebuild install-app-deps && rimraf dist && yarn build && electron-builder --linux",
-    "deploy:windows": "electron-rebuild install-app-deps --platform linux --arch amd64 && rimraf dist && yarn build && electron-builder --x64 --win",
+    "deploy:windows": "electron-rebuild install-app-deps --platform win32 --arch x64 && rimraf dist && yarn build && electron-builder --x64 --win",
     "start": "cross-env NODE_ENV=production node node_modules/electron/cli.js build/index",
     "watch:app": "cd webapp && webpack serve --hot",
     "watch:host": "tsc --watch"
