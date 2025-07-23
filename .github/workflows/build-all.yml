@@ -15,7 +15,7 @@ jobs:
       - uses: actions/cache@v4
         id: yarn-cache
         with:
-          path: ~/.npm
+          path: ${{ env.USERPROFILE }}/.yarn
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: ${{ runner.os }}-yarn-
 
