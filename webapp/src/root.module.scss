@@ -1,11 +1,11 @@
 :local(.root) {
-    width: calc(100% - 2em);
-    height: calc(100% - 2em);
-    overflow: auto;
-    display: grid;
-    grid-template-rows: repeat(4, auto) 1fr;
-    align-items: flex-start;
-    padding: 1em;
-    row-gap: 0.3em;
-    position: relative;
+  width: calc(100% - 2em);
+  height: calc(100% - 2em);
+  overflow: auto;
+  display: grid;
+  grid-template-rows: repeat(4, auto) 1fr;
+  align-items: flex-start;
+  padding: 1em;
+  row-gap: 0.3em;
+  position: relative;
 }

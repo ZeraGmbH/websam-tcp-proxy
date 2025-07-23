@@ -75,6 +75,10 @@ declare module "ipc" {
     type: "notify-serial-open";
   }
 
+  interface IStartNotification {
+    type: "auto-start";
+  }
+
   type TRequest =
     | ICloseSerialRequest
     | ICloseTcpRequest
@@ -93,6 +97,7 @@ declare module "ipc" {
     | IConnectNotification
     | IDataNotification
     | ISerialOpenNotification
+    | IStartNotification
     | ITcpOpenNotification;
 
   type TNotificationType = TNotification["type"];

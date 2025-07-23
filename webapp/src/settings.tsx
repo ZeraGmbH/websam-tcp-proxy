@@ -33,6 +33,7 @@ export function useSettings(): [
 ] {
   const [settings, setSettings] =
     React.useState<IConfigurationData>(initialConfig);
+
   const [config, setConfig] = React.useState("");
 
   function loadConfig(res: ipc.IConfigResponse): void {

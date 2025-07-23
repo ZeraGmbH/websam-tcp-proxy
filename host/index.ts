@@ -1,5 +1,11 @@
 import { app, BrowserWindow, ipcMain } from "electron";
-import { TRequestType, TResponse, TTypedRequest } from "ipc";
+import {
+  IStartNotification,
+  TNotification,
+  TRequestType,
+  TResponse,
+  TTypedRequest,
+} from "ipc";
 import { join } from "path";
 
 import { listeners, THandler } from "./appListeners";
@@ -29,7 +35,7 @@ function startup(): void {
   });
 
   /** So könnte man sich eine dynamische Verteilung von Nachrichten aus der Anwendung in den Host vorstellen. */
-  const sendToApp = (response: TResponse): void =>
+  const sendToApp = <T extends TResponse | TNotification>(response: T): void =>
     window.webContents.send("hostToApp", response);
 
   ipcMain.on(
@@ -46,6 +52,15 @@ function startup(): void {
       }
     }
   );
+
+  /** Automatisch starten. */
+  window.webContents.on("dom-ready", () => {
+    if (process.argv.includes("--start"))
+      setTimeout(
+        () => sendToApp<IStartNotification>({ type: "auto-start" }),
+        5000
+      );
+  });
 
   /** In Produktion wird die in dem Electron Paket gebundelte Anwendung aufgerufen. */
   if (isProduction) {

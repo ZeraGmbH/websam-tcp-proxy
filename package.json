@@ -44,6 +44,7 @@
     "debug": "^4.4.1",
     "electron": "^37.2.3",
     "electron-builder": "^26.0.12",
+    "electron-rebuild": "^3.2.9",
     "eslint": "^9.31.0",
     "mini-css-extract-plugin": "^2.9.2",
     "ncp": "^2.0.0",

@@ -1,9 +1,9 @@
 :local(.pings) {
-    display: grid;
-    grid-auto-flow: row;
+  display: grid;
+  grid-auto-flow: row;
 
-    > button {
-        margin-left: 1em;
-        justify-self: flex-start;
-    }
+  > button {
+    margin-left: 1em;
+    justify-self: flex-start;
+  }
 }
