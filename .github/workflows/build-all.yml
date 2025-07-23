@@ -1,0 +1,42 @@
+name: CD-Pipeline
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-frontend:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v4
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: ${{ runner.os }}-yarn-
+
+      - name: Installing Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Installing NPM Packages
+        run: yarn --frozen-lockfile
+
+      - name: Deploy
+        run: yarn deploy:windows
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-executable
+          path: dist/tcp-proxy.exe
+          retention-days: 28
