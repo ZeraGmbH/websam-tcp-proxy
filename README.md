@@ -1,1 +1,15 @@
-![image](https://github.com/JMS-1/tcp-proxy/assets/3493757/7dc77059-e5e1-4fb2-af3b-aff0232e3d65)
+# [Work in Progress]
+
+![Erster Start](docs/initial.png)
+
+![Neuer serieller Port](docs/port1.png)
+
+![Gerät auswählen](docs/port2.png)
+
+![Serieller Port](docs/port3.png)
+
+![PING](docs/ping.png)
+
+![TCP/IP Proxies](docs/tcp.png)
+
+![Aktiv](docs/run.png)
