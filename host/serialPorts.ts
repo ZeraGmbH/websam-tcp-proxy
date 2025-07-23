@@ -10,9 +10,7 @@ export async function getSerialPorts(
   const ports = await SerialPort.list();
 
   reply<ISerialPortsResponse>({
-    portNames: ports
-      .filter((p) => p.path.startsWith("/dev/"))
-      .map((p) => p.path.substring(5)),
+    portNames: ports.map((p) => p.path),
     type: "serial-response",
   });
 }

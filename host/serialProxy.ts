@@ -35,7 +35,7 @@ export class SerialProxy extends Proxy {
         dataBits: 8,
         endOnClose: true,
         parity: "none",
-        path: `/dev/${device}`,
+        path: device,
         stopBits: 2,
       },
       (e) => {
@@ -49,6 +49,8 @@ export class SerialProxy extends Proxy {
         }
       }
     );
+
+    this._port.on("error", (e) => console.log(e.message));
   }
 
   /** Daten des TCP/IP Clients an die serielle Leitung senden. */
