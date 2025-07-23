@@ -11,7 +11,7 @@ export interface IConfiguration {
   pingInterval: number | null;
   proxies: IProxyConfiguration[];
   proxyIp: string;
-  serial: ISerialConfiguration | ISerialConfiguration[];
+  serials: ISerialConfiguration[];
 }
 
 /** Hilfsklasse zur Bereitstellung eines TCP/IP Server Ports. */

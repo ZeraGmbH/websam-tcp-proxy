@@ -18,15 +18,11 @@ export const Server: React.FC<IServerProps> = (props) => {
 
   const { onClose } = props;
 
-  var ports = Array.isArray(settings.serial)
-    ? settings.serial
-    : [settings.serial];
-
   return (
     <div className={clsx(styles.server, props.className)}>
       <div>
         <h1>TCP/IP Server gestartet</h1>
-        {ports.map((_p, i) => (
+        {settings.serials.map((_p, i) => (
           <Serial key={i} index={i} />
         ))}
         {settings.proxies.map((_p, i) => (

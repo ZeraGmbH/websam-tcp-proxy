@@ -8,7 +8,7 @@ export interface IConfigurationData {
   pingInterval: number | null;
   proxies: ipc.IProxyConfiguration[];
   proxyIp: string;
-  serial: ipc.ISerialConfiguration | ipc.ISerialConfiguration[];
+  serials: ipc.ISerialConfiguration[];
 }
 
 export interface IConfiguration extends IConfigurationData {
@@ -23,7 +23,7 @@ const initialConfig: IConfiguration = {
   pingInterval: 5000,
   proxies: [],
   proxyIp: "",
-  serial: { device: "", port: null },
+  serials: [],
   update: () => alert("out of bound call to settings updater"),
 };
 

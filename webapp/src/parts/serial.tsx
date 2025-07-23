@@ -42,13 +42,11 @@ export const Serial: React.FC<ISerialProps> = (props) => {
       prop: TKey,
       value: ipc.ISerialConfiguration[TKey]
     ) => {
-      const ports = Array.isArray(settings.serial)
-        ? [...settings.serial]
-        : [settings.serial];
+      const ports = [...settings.serials];
 
       ports[index] = { ...ports[index], [prop]: value };
 
-      settings.update("serial", ports);
+      settings.update("serials", ports);
     },
     [settings, index]
   );
@@ -74,18 +72,12 @@ export const Serial: React.FC<ISerialProps> = (props) => {
   );
 
   const onDelete = React.useCallback(() => {
-    const ports = Array.isArray(settings.serial)
-      ? [...settings.serial]
-      : [settings.serial];
+    const ports = [...settings.serials];
 
     ports.splice(index, 1);
 
-    settings.update("serial", ports);
+    settings.update("serials", ports);
   }, [settings, index]);
-
-  const ports = Array.isArray(settings.serial)
-    ? settings.serial
-    : [settings.serial];
 
   return (
     <div className={clsx(styles.serial, props.className)}>
@@ -94,7 +86,7 @@ export const Serial: React.FC<ISerialProps> = (props) => {
         <input
           placeholder="(Gerätename)"
           type="text"
-          value={ports[index].device}
+          value={settings.serials[index].device}
           onChange={onDevice}
         />
         &nbsp;
@@ -113,7 +105,7 @@ export const Serial: React.FC<ISerialProps> = (props) => {
         </span>
       </label>
       <div className={styles.port}>
-        <Port port={ports[index].port} onPort={onPort} />
+        <Port port={settings.serials[index].port} onPort={onPort} />
       </div>
     </div>
   );

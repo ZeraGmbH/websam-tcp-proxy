@@ -47,9 +47,7 @@ export const Serial: React.FC<ISerialProps> = (props) => {
   }, [portOpened, dataInfo]);
 
   React.useEffect(() => {
-    var ports = Array.isArray(settings.serial)
-      ? settings.serial
-      : [settings.serial];
+    var ports = settings.serials;
 
     setDevice(ports[index].device);
 

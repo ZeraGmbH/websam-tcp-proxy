@@ -13,24 +13,18 @@ export const Serials: React.FC<ISerialsProps> = (props) => {
   const [settings] = React.useContext(SettingsContext);
 
   const onAdd = React.useCallback(() => {
-    const ports = Array.isArray(settings.serial)
-      ? [...settings.serial]
-      : [settings.serial];
+    const ports = [...settings.serials];
 
     ports.push({ device: "", port: 0 });
 
-    settings.update("serial", ports);
+    settings.update("serials", ports);
   }, [settings]);
-
-  const ports = Array.isArray(settings.serial)
-    ? settings.serial
-    : [settings.serial];
 
   return (
     <fieldset className={clsx(styles.serials, props.className)}>
       <legend>Lokale serielle Schnittstellen</legend>
       <button onClick={onAdd}>Schnittstelle hinzufügen</button>
-      {ports.map((_p, i) => (
+      {settings.serials.map((_p, i) => (
         <Serial key={i} index={i} />
       ))}
     </fieldset>
