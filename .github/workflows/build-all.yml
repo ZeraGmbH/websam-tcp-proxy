@@ -28,7 +28,7 @@ jobs:
         run: yarn --frozen-lockfile
 
       - name: Deploy
-        run: yarn deploy:windows
+        run: yarn deploy
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
