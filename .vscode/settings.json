@@ -10,5 +10,7 @@
   "files.exclude": {
     "**/node_modules": true
   },
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "spellright.language": ["de_DE"],
+  "spellright.documentTypes": ["markdown", "latex", "plaintext"]
 }
