@@ -21,7 +21,7 @@ export const Serial: React.FC<ISerialProps> = (props) => {
   const [client, setClient] = React.useState(false);
   const [paused, setPaused] = React.useState(false);
   const [data, setData] = React.useState([0, 0]);
-  const [portId] = React.useState(uuid());
+  const [portId, setPortId] = React.useState(uuid());
 
   const { index } = props;
 
@@ -61,6 +61,10 @@ export const Serial: React.FC<ISerialProps> = (props) => {
         portId,
         type: "close-serial-request",
       });
+
+      setDevice(false);
+      setClient(false);
+      setData([0, 0]);
 
       if (on)
         electronHost.send<ipc.IOpenSerialRequest>({
