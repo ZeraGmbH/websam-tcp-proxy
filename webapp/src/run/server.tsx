@@ -23,13 +23,13 @@ export const Server: React.FC<IServerProps> = (props) => {
       <div>
         <h1>TCP/IP Server gestartet</h1>
         {settings.serials.map((_p, i) => (
-          <Serial key={i} index={i} />
+          <Serial key={i} index={i} className={styles.row} />
         ))}
         {settings.proxies.map((_p, i) => (
-          <Tcp key={i} index={i} />
+          <Tcp key={i} index={i} className={styles.row} />
         ))}
         {settings.pingHosts.map((ip) => (
-          <Ping key={ip} ip={ip} />
+          <Ping key={ip} ip={ip} className={styles.row} />
         ))}
         <button onClick={onClose}>Stop</button>
       </div>

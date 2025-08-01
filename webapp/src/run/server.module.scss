@@ -17,6 +17,10 @@
     display: grid;
     grid-auto-flow: row;
 
+    > :local(.row) {
+      height: 2em;
+    }
+
     > button {
       background: #ff0000;
       justify-self: flex-end;

@@ -19,6 +19,7 @@ export const Serial: React.FC<ISerialProps> = (props) => {
 
   const [device, setDevice] = React.useState(false);
   const [client, setClient] = React.useState(false);
+  const [paused, setPaused] = React.useState(false);
   const [data, setData] = React.useState([0, 0]);
   const [portId] = React.useState(uuid());
 
@@ -54,31 +55,50 @@ export const Serial: React.FC<ISerialProps> = (props) => {
     };
   }, [portOpened, dataInfo]);
 
-  React.useEffect(() => {
-    var ports = settings.serials;
-
-    electronHost.send<ipc.IOpenSerialRequest>({
-      proxyIp: settings.proxyIp,
-      port: ports[index],
-      portId,
-      type: "open-serial-request",
-    });
-
-    return () =>
+  var startSerial = React.useCallback(
+    (on: boolean) => {
       electronHost.send<ipc.ICloseSerialRequest>({
         portId,
         type: "close-serial-request",
       });
-  }, [settings, index, portId]);
+
+      if (on)
+        electronHost.send<ipc.IOpenSerialRequest>({
+          proxyIp: settings.proxyIp,
+          port: settings.serials[index],
+          portId,
+          type: "open-serial-request",
+        });
+    },
+    [settings, index, portId]
+  );
+
+  React.useEffect(
+    () => (startSerial(true), () => startSerial(false)),
+    [startSerial]
+  );
+
+  var togglePause = React.useCallback(
+    () =>
+      setPaused((paused) => {
+        startSerial(paused);
+
+        return !paused;
+      }),
+    [startSerial]
+  );
 
   var port = settings.serials[index];
 
   return (
     <div className={clsx(styles.serial, props.className)}>
-      <Status count={data[1]} error={!device} />
-      <Status count={data[0]} warning={!client}>
+      <Status count={data[1]} error={!device} noDots={paused} />
+      <Status count={data[0]} warning={!client} noDots={paused}>
         Serielle Verbindung auf {port.port} to {port.device}
       </Status>
+      <button onClick={togglePause}>
+        {paused ? "Fortsetzen" : "Pausieren"}
+      </button>
     </div>
   );
 };

@@ -8,6 +8,7 @@ interface IStatusProps {
   className?: string;
   count?: number;
   error?: boolean;
+  noDots?: boolean;
   warning?: boolean;
 }
 
@@ -23,7 +24,8 @@ export const Status: React.FC<IStatusProps> = (props) => {
         className={clsx(
           styles.dot,
           props.error && styles.error,
-          props.warning && styles.warning
+          props.warning && styles.warning,
+          props.noDots && styles.hidden
         )}
       />
       <div>{props.children}</div>

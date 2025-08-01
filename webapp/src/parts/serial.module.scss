@@ -17,12 +17,13 @@
 
   :local(.selector) {
     position: relative;
+    z-index: 1;
 
     > :local(.chooser) {
       position: absolute;
       background: #ffffff;
-      top: calc(100% - 0.5em);
-      left: calc(100% - 0.5em);
+      top: 100%;
+      left: 100%;
       white-space: nowrap;
       padding: 0 0.5em 0.5em 0.5em;
       overflow: hidden;

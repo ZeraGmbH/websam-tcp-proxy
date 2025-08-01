@@ -19,5 +19,10 @@
     &:local(.warning) {
       background: #ffa500;
     }
+
+    &:local(.hidden) {
+      visibility: hidden;
+      pointer-events: none;
+    }
   }
 }
