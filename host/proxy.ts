@@ -62,6 +62,9 @@ export abstract class Proxy {
       /** Datenübertragung vom Client. */
       client.on("data", this.fromClient);
 
+      /** Fehler einfach nur protokollieren. */
+      client.on("error", (e) => console.error(e.message));
+
       /** Aktiven Client vermerken. */
       this.setClient(client);
     });
