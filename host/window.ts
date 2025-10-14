@@ -18,7 +18,7 @@ export function createWindow(): BrowserWindow {
   const browserOptions: BrowserWindowConstructorOptions = {
     autoHideMenuBar: true,
     height: 800,
-    title: "TCP/IP Proxy",
+    title: `TCP/IP Proxy ${app.getVersion()}`,
     useContentSize: true,
     webPreferences: {
       backgroundThrottling: false,
