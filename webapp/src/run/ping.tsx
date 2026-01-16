@@ -28,8 +28,8 @@ export const Ping: React.FC<IPingProps> = (props) => {
 
     sys.probe(
       ip,
-      (info) => {
-        setOk(info.alive === true);
+      (alive) => {
+        setOk(alive === true);
 
         window.setTimeout(
           () => setTries(tries + 1),
