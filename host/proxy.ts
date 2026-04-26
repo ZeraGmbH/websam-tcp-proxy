@@ -42,7 +42,7 @@ export abstract class Proxy {
    */
   protected constructor(
     ip: string,
-    public readonly port: number
+    public readonly port: number,
   ) {
     /** Fehler werden im Wesentlichen ignoriert. */
     this._tcp.on("error", (e) => console.error(e.message));
@@ -126,7 +126,7 @@ export abstract class Proxy {
     try {
       /** Daten übertragen - erst einmal ohne eigene Zwischenspeicherung in einer Queue. */
       this._client?.write(data);
-    } catch (e) {
+    } catch (e: any) {
       /** Fehlerbearbeitung ist eher rudimentär. */
       console.error(e.message);
     }
@@ -137,14 +137,14 @@ export abstract class Proxy {
     try {
       /** Aktiven Client abmelden. */
       this._client?.destroy();
-    } catch (e) {
+    } catch (e: any) {
       console.error(e.message);
     }
 
     try {
       /** Server beenden. */
       this._tcp.close();
-    } catch (e) {
+    } catch (e: any) {
       console.error(e.message);
     }
   }

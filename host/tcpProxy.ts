@@ -27,7 +27,7 @@ export class TcpProxy extends Proxy {
     server: string,
     serverPort: number,
     private readonly _remoteServer: string,
-    private readonly _remotePort: number
+    private readonly _remotePort: number,
   ) {
     /** Lokalen Server einrichten. */
     super(server, serverPort);
@@ -57,7 +57,7 @@ export class TcpProxy extends Proxy {
   /** Verbindung zum entfernten Server aufsetzen. */
   private readonly connect = (): void => {
     this._remote?.connect(this._remotePort, this._remoteServer, () =>
-      this.onOpen?.(true)
+      this.onOpen?.(true),
     );
   };
 
@@ -65,7 +65,7 @@ export class TcpProxy extends Proxy {
   protected write(data: Buffer): void {
     try {
       this._remote?.write(data);
-    } catch (e) {
+    } catch (e: any) {
       console.error(e.message);
     }
   }
@@ -75,7 +75,7 @@ export class TcpProxy extends Proxy {
     try {
       /** TCP/IP Client beenden. */
       this._remote?.destroy();
-    } catch (e) {
+    } catch (e: any) {
       console.error(e.message);
     } finally {
       this._remote = undefined;
@@ -94,7 +94,7 @@ export class TcpProxy extends Proxy {
    */
   static create(
     proxyIp: string,
-    tcp: ipc.IProxyConfiguration
+    tcp: ipc.IProxyConfiguration,
   ): TcpProxy | undefined {
     /** Lokale Verbindung prüfen. */
     if (!tcp || tcp.port == null || tcp.port < 1024 || tcp.port > 65535) return;
@@ -114,7 +114,7 @@ const proxies: Record<string, TcpProxy> = {};
 export async function openTcp(
   _win: BrowserWindow,
   request: ipc.IOpenTcpRequest,
-  reply: <T extends ipc.TResponse | ipc.TNotification>(response: T) => void
+  reply: <T extends ipc.TResponse | ipc.TNotification>(response: T) => void,
 ): Promise<void> {
   const proxy = TcpProxy.create(request.proxyIp, request.tcp);
 
@@ -147,7 +147,7 @@ export async function openTcp(
 
 export async function closeTcp(
   _win: BrowserWindow,
-  request: ipc.ICloseTcpRequest
+  request: ipc.ICloseTcpRequest,
 ): Promise<void> {
   const proxy = proxies[request.tcpId];
 

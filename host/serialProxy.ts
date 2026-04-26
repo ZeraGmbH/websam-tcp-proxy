@@ -22,7 +22,7 @@ export class SerialProxy extends Proxy {
   private constructor(
     server: string,
     port: number,
-    public readonly device: string
+    public readonly device: string,
   ) {
     /** TCP/IP Server konfigurieren. */
     super(server, port);
@@ -47,7 +47,7 @@ export class SerialProxy extends Proxy {
           /* Erfolgreiches Öffnen der Verbindung melden. */
           this.onOpen?.();
         }
-      }
+      },
     );
 
     this._port.on("error", (e) => console.log(e.message));
@@ -68,7 +68,7 @@ export class SerialProxy extends Proxy {
         /** Daten an den möglicherweise verbundenen TCP/IP Client durchreichen. */
         if (buf?.length) this.toClient(buf);
         else await new Promise((success) => setTimeout(success, 100));
-      } catch (e) {
+      } catch (e: any) {
         /** Bei der Fehlerbehandlung ist noch reichlich Luft nach oben. */
         console.error(e.message);
 
@@ -80,7 +80,7 @@ export class SerialProxy extends Proxy {
   shutdown(): void {
     try {
       this._port?.close();
-    } catch (e) {
+    } catch (e: any) {
       console.error(e.message);
     }
 
@@ -97,7 +97,7 @@ export class SerialProxy extends Proxy {
    */
   static create(
     proxyIp: string,
-    serial: ipc.ISerialConfiguration
+    serial: ipc.ISerialConfiguration,
   ): SerialProxy | undefined {
     if (
       !serial.device ||
@@ -116,7 +116,7 @@ const proxies: Record<string, SerialProxy> = {};
 export async function openSerial(
   _win: BrowserWindow,
   request: ipc.IOpenSerialRequest,
-  reply: <T extends ipc.TResponse | ipc.TNotification>(response: T) => void
+  reply: <T extends ipc.TResponse | ipc.TNotification>(response: T) => void,
 ): Promise<void> {
   const proxy = SerialProxy.create(request.proxyIp, request.port);
 
@@ -148,7 +148,7 @@ export async function openSerial(
 
 export async function closeSerial(
   _win: BrowserWindow,
-  request: ipc.ICloseSerialRequest
+  request: ipc.ICloseSerialRequest,
 ): Promise<void> {
   const proxy = proxies[request.portId];
 

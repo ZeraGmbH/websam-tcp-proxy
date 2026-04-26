@@ -1,18 +1,20 @@
 import * as ipc from "ipc";
 
 /** Im Standalone Modus gibt es kein require - bei Electron Hosting schon. */
-const ipcRenderer = window.require?.("electron").ipcRenderer;
+const ipcRenderer = (window as { require?: any }).require?.(
+  "electron",
+).ipcRenderer;
 
 type TCallbackResponse<TType extends ipc.TResponseType> = <
   T extends ipc.TTypedResponse<TType>,
 >(
-  response: T
+  response: T,
 ) => void;
 
 type TCallbackNotification<TType extends ipc.TNotificationType> = <
   T extends ipc.TTypedNotification<TType>,
 >(
-  response: T
+  response: T,
 ) => void;
 
 type TCallback<T extends ipc.TResponseType | ipc.TNotificationType> =
@@ -35,14 +37,14 @@ export const electronHost = new (class {
       "hostToApp",
       <T extends ipc.TResponseType>(
         _ev: unknown,
-        response: ipc.TTypedResponse<T>
+        response: ipc.TTypedResponse<T>,
       ): void => {
         /** Natürlich nur, wenn es sich um eine bekannte Nachricht handelt. */
         const list = this._listeners[response.type] || [];
 
         /** Pro Nachrichtenkarten kann es natürlich mehrere Anmeldungen geben. */
         list.forEach((p) => (p as Function)(response));
-      }
+      },
     );
   }
 
@@ -63,7 +65,7 @@ export const electronHost = new (class {
    */
   addListener<T extends ipc.TResponseType | ipc.TNotificationType>(
     type: T,
-    listener: TCallback<T>
+    listener: TCallback<T>,
   ): void {
     let list = this._listeners[type];
 
@@ -82,7 +84,7 @@ export const electronHost = new (class {
    */
   removeListener<T extends ipc.TResponseType | ipc.TNotificationType>(
     type: T,
-    listener: TCallback<T>
+    listener: TCallback<T>,
   ): void {
     const list = this._listeners[type] as TCallback<T>[];
 

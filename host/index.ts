@@ -12,7 +12,7 @@ import { listeners, THandler } from "./appListeners";
 import { createWindow, isProduction } from "./window";
 
 console.info(
-  `electron ${process.versions.electron} (node.js ${process.version})`
+  `electron ${process.versions.electron} (node.js ${process.version})`,
 );
 
 /** Das ist das Fenster für die Anwendung. */
@@ -47,10 +47,10 @@ function startup(): void {
         const handler = listeners[request.type] as THandler<T>;
 
         await handler?.(window, request, sendToApp);
-      } catch (error) {
+      } catch (error: any) {
         console.error(error.message);
       }
-    }
+    },
   );
 
   /** Automatisch starten. */
@@ -58,7 +58,7 @@ function startup(): void {
     if (process.argv.includes("--start"))
       setTimeout(
         () => sendToApp<IStartNotification>({ type: "auto-start" }),
-        5000
+        5000,
       );
   });
 
