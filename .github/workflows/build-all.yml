@@ -8,14 +8,14 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Detect USERPROFILE
         run: echo "CACHEROOT=$env:USERPROFILE" >> $env:GITHUB_ENV
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         id: yarn-cache
         with:
           path: ${{ env.CACHEROOT }}\.yarn
@@ -23,7 +23,7 @@ jobs:
           restore-keys: ${{ runner.os }}-yarn-
 
       - name: Installing Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 24
 
@@ -34,7 +34,7 @@ jobs:
         run: yarn deploy
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: windows-executable
           path: dist/tcp-proxy.exe
