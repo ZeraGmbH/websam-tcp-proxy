@@ -39,4 +39,4 @@ jobs:
         with:
           name: windows-executable
           path: dist/tcp-proxy.exe
-          retention-days: 28
+          retention-days: 7
