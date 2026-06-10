@@ -33,10 +33,10 @@ export const Ping: React.FC<IPingProps> = (props) => {
 
         window.setTimeout(
           () => setTries(tries + 1),
-          settings.pingInterval ?? 0
+          settings.pingInterval ?? 0,
         );
       },
-      { timeout: 1000 }
+      { timeout: 1 },
     );
   }, [active, ip, settings, tries]);
 
